@@ -42,7 +42,7 @@ public class UI {
 
 	public static ChessPosition readChessPosition(Scanner sc) {
 		try {
-			String s = sc.nextLine();
+			String s = sc.nextLine().trim().toLowerCase();
 			char column = s.charAt(0);
 			int row = Integer.parseInt(s.substring(1));
 			return new ChessPosition(column, row);
@@ -51,21 +51,40 @@ public class UI {
 		}
 	}
 
+	public static String readPromotionType(Scanner sc) {
+		System.out.print("Enter piece for promotion (B/N/R/Q): ");
+		String type = firstLetter(sc.nextLine());
+		while (!type.equals("B") && !type.equals("N") && !type.equals("R") && !type.equals("Q")) {
+			System.out.print("Invalid value! Enter piece for promotion (B/N/R/Q): ");
+			type = firstLetter(sc.nextLine());
+		}
+		return type;
+	}
+
+	private static String firstLetter(String s) {
+		s = s.trim().toUpperCase();
+		return s.isEmpty() ? "" : s.substring(0, 1);
+	}
+
 	public static void printMatch(ChessMatch chessMatch, List<ChessPiece> captured) {
 		printBoard(chessMatch.getPieces());
 		System.out.println();
 		printCapturedPieces(captured);
 		System.out.println();
 		System.out.println("Turn: " + chessMatch.getTurn());
-		if(!chessMatch.getCheckMate()) {
+		if(chessMatch.getCheckMate()) {
+			System.out.println("CHECKMATE!");
+			System.out.println("Winner: " + chessMatch.getCurrentPlayer());
+		}
+		else if(chessMatch.getStalemate()) {
+			System.out.println("STALEMATE!");
+			System.out.println("Draw");
+		}
+		else {
 			System.out.println("Waiting player: " + chessMatch.getCurrentPlayer());
 			if(chessMatch.getCheck()) {
 				System.out.println("CHECK!");
 			}
-		}
-		else {
-			System.out.println("CHECKMATE!");
-			System.out.println("Winner: " + chessMatch.getCurrentPlayer());
 		}
 	}
 

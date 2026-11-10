@@ -85,13 +85,16 @@ public class King extends ChessPiece{
 		}
 		
 		//#specialmove castling
-		if(getMoveCount() == 0 && !chessMatch.getCheck()) {
+		// The king can't castle out of check nor through an attacked square
+		Color opponent = (getColor() == Color.WHITE) ? Color.BLACK : Color.WHITE;
+		if(getMoveCount() == 0 && !chessMatch.isSquareAttacked(position, opponent)) {
 			//#specialmove castling Kingside rook
 			Position posR1 = new Position(position.getRow(), position.getColumn() + 3);
 			if(testRookCastling(posR1)) {
 				Position p1 = new Position(position.getRow(), position.getColumn() + 1);
 				Position p2 = new Position(position.getRow(), position.getColumn() + 2);
-				if(getBoard().piece(p1) == null && getBoard().piece(p2) == null) {
+				if(getBoard().piece(p1) == null && getBoard().piece(p2) == null
+						&& !chessMatch.isSquareAttacked(p1, opponent) && !chessMatch.isSquareAttacked(p2, opponent)) {
 					mat[position.getRow()][position.getColumn() + 2] = true;
 				}
 			}
@@ -101,7 +104,8 @@ public class King extends ChessPiece{
 				Position p1 = new Position(position.getRow(),position.getColumn() - 1);
 				Position p2 = new Position(position.getRow(),position.getColumn() - 2);
 				Position p3 = new Position(position.getRow(),position.getColumn() - 3);
-				if(getBoard().piece(p1) == null && getBoard().piece(p2) == null && getBoard().piece(p3) == null) {
+				if(getBoard().piece(p1) == null && getBoard().piece(p2) == null && getBoard().piece(p3) == null
+						&& !chessMatch.isSquareAttacked(p1, opponent) && !chessMatch.isSquareAttacked(p2, opponent)) {
 					mat[position.getRow()][position.getColumn() - 2] = true;
 				}
 			}
